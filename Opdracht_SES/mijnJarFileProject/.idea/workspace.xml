@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="05414e28-9ede-44fa-af94-5445bedf6f54" name="Changes" comment="" />
+    <list default="true" id="05414e28-9ede-44fa-af94-5445bedf6f54" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../../Candycrush/libs/Candycrush-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../mijnJarFileProject/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Candycrush/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Candycrush/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Candycrush/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Candycrush/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../Candycrush/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Candycrush/src/main/java/be/kuleuven/candycrush/CandycrushController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Candycrush/src/main/java/be/kuleuven/candycrush/CandycrushController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Candycrush/src/main/java/be/kuleuven/candycrush/model/CandycrushModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Candycrush/src/main/java/be/kuleuven/candycrush/model/CandycrushModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Candycrush/src/main/java/be/kuleuven/candycrush/view/CandycrushView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Candycrush/src/main/java/be/kuleuven/candycrush/view/CandycrushView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Candycrush/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Candycrush/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Candycrush/src/main/resources/be/kuleuven/candycrush/candycrush-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Candycrush/src/main/resources/be/kuleuven/candycrush/candycrush-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Candycrush/src/test/java/be/kuleuven/candycrush/model/CandycrushModelTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Candycrush/src/test/java/be/kuleuven/candycrush/model/CandycrushModelTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../mijnJarFile.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../mijnJarFileProject/src/main/java/be/kuleuven/CheckNeighboursInGrid.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../mijnJarFileProject/src/main/java/be/kuleuven/CheckNeighboursInGrid.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -47,11 +61,11 @@
     </system>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2daY2HBaDCWBCdmGhgV3YZgMwlr" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -64,7 +78,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/robin/Documents/SES_opdracht/candycrush",
+    "last_opened_file_path": "C:/Users/robin/Documents/SES_opdracht/mijnJarFileProject",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -131,6 +145,7 @@
       <option name="presentableId" value="Default" />
       <updated>1710247447874</updated>
       <workItem from="1710247448899" duration="321000" />
+      <workItem from="1710412835556" duration="51000" />
     </task>
     <servers />
   </component>

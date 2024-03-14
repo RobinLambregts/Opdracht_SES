@@ -57,4 +57,8 @@ public class CandycrushView extends Region {
         }
         return index;
     }
+
+    public void reset(){
+        getChildren().clear();
+    }
 }
