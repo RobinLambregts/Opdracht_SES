@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import be.kuleuven.candycrush.model.CandycrushModel;
+import be.kuleuven.candycrush.model.Position;
 import be.kuleuven.candycrush.view.CandycrushView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -68,13 +69,14 @@ public class CandycrushController {
     }
 
     public void onCandyClicked(MouseEvent me){
-        int candyIndex = view.getIndexOfClicked(me);
-        model.candyWithIndexSelected(candyIndex);
+        Position candyPosition = view.getPositionOfClicked(me);
+        model.candyWithPositionSelected(candyPosition);
         update();
     }
 
     public void gestart(){
         model.start();
+        view.makeBoard();
         btn.setDisable(true);
         resetknop.setDisable(false);
         speelbord.getChildren().add(view);
@@ -85,8 +87,8 @@ public class CandycrushController {
         }
         else{
             textInput.setText("welcome guest");
-            paneel.setStyle("-fx-background-color: white");
-            speelbord.setStyle("-fx-background-color: red");
+            paneel.setStyle("-fx-background-color: blue");
+            speelbord.setStyle("-fx-background-color: white");
         }
     }
 
