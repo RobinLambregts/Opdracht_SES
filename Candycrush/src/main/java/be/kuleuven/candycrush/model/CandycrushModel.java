@@ -110,7 +110,8 @@ public class CandycrushModel {
             ArrayList<Position> NeigborIds = getSameNeighbourPositions(position);
             for (Position i : NeigborIds) {
                 Candy randomCandy = randomCandy();
-                view.makeCandyShape(i, randomCandy);
+                int index = i.getIndex();
+                speelbord.set(index, randomCandy);
                 score++;
             }
         } else {

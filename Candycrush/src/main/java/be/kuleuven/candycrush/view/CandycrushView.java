@@ -25,21 +25,15 @@ public class CandycrushView extends Region {
     public void update(){
         getChildren().clear();
         int i = 0;
-        int height = 0;
+        int j = 0;
         Iterator<Candy> iter = model.getSpeelbord().iterator();
         while(iter.hasNext()) {
             Candy candy = iter.next();
-            Rectangle rectangle = new Rectangle(i * widthCandy, height * heigthCandy, widthCandy,heigthCandy);
-            rectangle.setFill(Color.TRANSPARENT);
-            rectangle.setStroke(Color.BLACK);
-            Text text = new Text("" + candy);
-            text.setX(rectangle.getX() + (rectangle.getWidth() - text.getBoundsInLocal().getWidth()) / 2);
-            text.setY(rectangle.getY() + (rectangle.getHeight() + text.getBoundsInLocal().getHeight()) / 2);
-            getChildren().addAll(rectangle,text);
-
+            Position position = model.getPosition(j, i);
+            makeCandyShape(position, candy);
             if (i == model.getBoardSize().columns() - 1) {
                 i = 0;
-                height++;
+                j++;
             } else {
                 i++;
             }
