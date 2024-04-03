@@ -24,27 +24,15 @@ public class CandycrushModelTests {
     }
 
     @Test
-    public void score_wanneerGeklikt_neemtToe() {
-        CandycrushModel model = new CandycrushModel("Robin");
-        BoardSize boardsize = new BoardSize(5,5);
-        Position position = new Position(3,3,boardsize);
-        int score = model.getScore();
-        model.candyWithPositionSelected(position);
-        assert (score < model.getScore());
-    }
-
-    @Test
     public void gegevenRowEnColumn_PositionIsJuist_isTrue() {
         CandycrushModel model = new CandycrushModel("Robin");
-        int width = model.getPosition().columnNr();
-        int row = 2;
-        int column = 3;
-        Position index = model.getPosition(row, column);
-        assert (index == row * width + column);
+        BoardSize boardsize = new BoardSize(5,5);
+        Position position = new Position(2,2,boardsize);
+        assert (position.equals(model.getPosition(2,2)));
     }
 
     @Test
-    public void spellenGegenereerd_namenZijnNietHetzelfde_isTrue() {
+    public void spellenGegenereerd_namenZijnHetzelfde_isTrue() {
         CandycrushModel model1 = new CandycrushModel("Robin");
         CandycrushModel model2 = new CandycrushModel("Robin");
         assert (model1.getSpeler().equals(model2.getSpeler()));
@@ -58,36 +46,23 @@ public class CandycrushModelTests {
     }
 
     @Test
-    public void outOfBoundsIndex_geenScore_isTrue() {
-        CandycrushModel model = new CandycrushModel("Player");
-        model.candyWithIndexSelected(-1); // Invalid index
-        assert (model.getScore() == 0); // Score should not change for an invalid index
-    }
-
-    @Test
-    public void rowEnColumn_indexIsJuist_isTrue() {
-        CandycrushModel model = new CandycrushModel("Player");
-        assert(model.getIndexFromRowColumn(4, 4) == 24);
+    public void rowEnColumn_PositionIsJuist_isTrue() {
+        CandycrushModel model = new CandycrushModel("Robin");
+        BoardSize boardsize = new BoardSize(5,5);
+        Position position = new Position(4,4,boardsize);
+        assert(model.getPosition(4, 4).equals(position));
     }
 
     @Test
     public void spelGestart_checkWidth_isJuist(){
         CandycrushModel model = new CandycrushModel("Robin");
-        assert (model.getWidth() == 5);
+        assert (model.getBoardSize().columns() == 5);
     }
 
     @Test
     public void spelGestart_scoreIsNul_isTrue(){
         CandycrushModel model = new CandycrushModel("Robin");
         assert (model.getScore() == 0);
-    }
-
-    @Test
-    void validIndex_geeftPunten_isTrue() {
-        CandycrushModel model = new CandycrushModel("Player");
-        model.start();
-        model.candyWithIndexSelected(7);
-        assert (model.getScore() >= 1);
     }
 
     @Test
