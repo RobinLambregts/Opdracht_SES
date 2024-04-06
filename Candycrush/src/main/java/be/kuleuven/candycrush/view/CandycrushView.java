@@ -10,6 +10,8 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import java.util.Iterator;
 
+import static be.kuleuven.candycrush.model.CandycrushModel.boardSize;
+
 public class CandycrushView extends Region {
     private CandycrushModel model;
     private int widthCandy;
@@ -26,9 +28,8 @@ public class CandycrushView extends Region {
         getChildren().clear();
         int i = 0;
         int j = 0;
-        Iterator<Candy> iter = model.getSpeelbord().iterator();
-        while(iter.hasNext()) {
-            Candy candy = iter.next();
+        while (i < boardSize.rows()*boardSize.columns()) {
+            Candy candy = model.randomCandy();
             Position position = model.getPosition(j, i);
             makeCandyShape(position, candy);
             if (i == model.getBoardSize().columns() - 1) {
