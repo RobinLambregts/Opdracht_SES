@@ -3,16 +3,16 @@ package be.kuleuven.candycrush.view;
 import be.kuleuven.candycrush.model.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Text;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+
 import java.util.Iterator;
 
-import static be.kuleuven.candycrush.model.CandycrushModel.boardSize;
-
 public class CandycrushView extends Region {
+
     private CandycrushModel model;
     private int widthCandy;
     private int heigthCandy;
@@ -21,18 +21,27 @@ public class CandycrushView extends Region {
         this.model = model;
         widthCandy = 30;
         heigthCandy = 30;
-        update();
     }
 
     public void update(){
         getChildren().clear();
         int i = 0;
         int j = 0;
-        while (i < boardSize.rows()*boardSize.columns()) {
-            Candy candy = model.randomCandy();
-            Position position = model.getPosition(j, i);
-            makeCandyShape(position, candy);
-            if (i == model.getBoardSize().columns() - 1) {
+        Iterator<Candy> iter = model.getSpeelbord().getCells();
+
+        while(iter.hasNext()) {
+            Candy candy = iter.next();
+
+            Rectangle rectangle = new Rectangle(i * widthCandy, j * heigthCandy, widthCandy,heigthCandy);
+            rectangle.setFill(Color.TRANSPARENT);
+            rectangle.setStroke(Color.BLACK);
+
+            Position position = new Position(j, i, model.getBoardSize());
+            Node node = makeCandyShape(position, candy);
+
+            getChildren().addAll(rectangle,node);
+
+            if (i == model.getBoardSize().rows() - 1) {
                 i = 0;
                 j++;
             } else {
@@ -60,7 +69,7 @@ public class CandycrushView extends Region {
         getChildren().clear();
     }
 
-    public void makeCandyShape(Position position, Candy candy){
+    public Node makeCandyShape(Position position, Candy candy){
         int x = position.columnNr()*widthCandy;
         int y = position.rowNr()*heigthCandy;
         Shape newCandy = null;
@@ -72,18 +81,17 @@ public class CandycrushView extends Region {
             newCandy = new Rectangle(x,y,widthCandy,heigthCandy);
             newCandy.setFill(candy.color());
         }
-        getChildren().add(newCandy);
+        return newCandy;
     }
 
     public void makeBoard(){
-        for (int k = 0; k < model.getBoardSize().rows(); k++) {
-            for (int j = 0; j < model.getBoardSize().columns(); j++) {
-                BoardSize boardSize = new BoardSize(model.getBoardSize().rows(), model.getBoardSize().columns());
-                Position position = new Position(k,j,boardSize);
+        for (int k = 0; k < model.getBoardSize().columns(); k++) {
+            for (int j = 0; j < model.getBoardSize().rows(); j++) {
+                Position position = new Position(k,j,model.getBoardSize());
                 Candy randomCandy = model.randomCandy();
-                makeCandyShape(position, randomCandy);
                 model.makePlayBoard(position, randomCandy);
             }
         }
+        update();
     }
 }

@@ -3,6 +3,7 @@ package be.kuleuven.candycrush;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import be.kuleuven.candycrush.model.BoardSize;
 import be.kuleuven.candycrush.model.CandycrushModel;
 import be.kuleuven.candycrush.model.Position;
 import be.kuleuven.candycrush.view.CandycrushView;
@@ -44,7 +45,9 @@ public class CandycrushController {
     private Button resetknop;
 
     private CandycrushModel model;
+
     private CandycrushView view;
+
 
     @FXML
     void initialize() {
@@ -54,7 +57,7 @@ public class CandycrushController {
         assert speelbord != null : "fx:id=\"speelbord\" was not injected: check your FXML file 'candycrush-view.fxml'.";
         assert textInput != null : "fx:id=\"textInput\" was not injected: check your FXML file 'candycrush-view.fxml'.";
         assert scoreInput != null : "fx:id=\"scoreInput\" was not injected: check your FXML file 'candycrush-view.fxml'.";
-        model = new CandycrushModel("Test");
+        model = new CandycrushModel("Robin");
         view = new CandycrushView(model);
         view.setOnMouseClicked(this::onCandyClicked);
         btn.setOnAction(e -> gestart());
@@ -62,37 +65,36 @@ public class CandycrushController {
         resetknop.setDisable(true);
     }
 
-    public void update(){
+    public void update() {
         String score = String.valueOf(model.getScore());
         scoreInput.setText(score);
         view.update();
     }
 
-    public void onCandyClicked(MouseEvent me){
+    public void onCandyClicked(MouseEvent me) {
         Position candyPosition = view.getPositionOfClicked(me);
         model.candyWithPositionSelected(candyPosition);
         update();
     }
 
-    public void gestart(){
+    public void gestart() {
         model.start();
         view.makeBoard();
         btn.setDisable(true);
         resetknop.setDisable(false);
         speelbord.getChildren().add(view);
-        if (textInput.getText().equals("Robin")){
+        if (textInput.getText().equals("Robin")) {
             textInput.setText("Hello Robin");
             paneel.setStyle("-fx-background-color: red");
             speelbord.setStyle("-fx-background-color: white");
-        }
-        else{
+        } else {
             textInput.setText("welcome guest");
             paneel.setStyle("-fx-background-color: blue");
             speelbord.setStyle("-fx-background-color: white");
         }
     }
 
-    public void reset(){
+    public void reset() {
         view.reset();
         paneel.setStyle("-fx-background-color: white");
         speelbord.setStyle("-fx-background-color: white");

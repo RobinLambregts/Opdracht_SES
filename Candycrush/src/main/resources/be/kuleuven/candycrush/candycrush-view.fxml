@@ -6,7 +6,7 @@
 <AnchorPane fx:id="paneel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="292.0" prefWidth="421.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.kuleuven.candycrush.CandycrushController">
    <children>
       <Button fx:id="btn" layoutX="25.0" layoutY="20.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="50.0" text="Start" />
-      <AnchorPane fx:id="speelbord" layoutX="95.0" layoutY="67.0" prefHeight="18.0" prefWidth="30.0" />
+      <AnchorPane fx:id="speelbord" layoutX="95.0" layoutY="67.0" prefHeight="9.0" prefWidth="12.0" />
       <Label fx:id="Label" layoutX="90.0" layoutY="24.0" text="Login" />
       <TextField fx:id="textInput" layoutX="120.0" layoutY="20.0" />
       <Label fx:id="scoreLabel" layoutX="315.0" layoutY="24.0" text="score:" />
