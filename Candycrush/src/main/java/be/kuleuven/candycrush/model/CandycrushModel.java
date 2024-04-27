@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class CandycrushModel {
     private final String speler;
-    private Board<Candy> speelbord;
+    private final Board<Candy> speelbord;
     public static BoardSize boardSize;
     private int score;
     private boolean gestart = false;
@@ -95,16 +95,12 @@ public class CandycrushModel {
         }
     }
 
-    public Object getCandy(Position position){
-        return speelbord.getCellAt(position);
-    }
-
     ArrayList<Position> getSameNeighbourPositions(Position position){
         ArrayList<Position> result = new ArrayList<>();
         ArrayList<Position> neighbors = position.neighborPositions();
         result.add(position);
         for (Position i : neighbors){
-            if (getCandy(position).equals(getCandy(i)) && position.validPosition(i.rowNr(), i.columnNr())){
+            if (speelbord.getCellAt(position).equals(speelbord.getCellAt(i)) && position.validPosition(i.rowNr(), i.columnNr())){
                 result.add(i);
             }
         }
@@ -118,6 +114,7 @@ public class CandycrushModel {
     public void start(){
         gestart = true;
     }
+
     public boolean isGestart() {
         return gestart;
     }

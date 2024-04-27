@@ -1,10 +1,6 @@
 package be.kuleuven.candycrush.model;
 
-import be.kuleuven.candycrush.model.Board;
-import be.kuleuven.candycrush.model.BoardSize;
-import be.kuleuven.candycrush.model.Position;
 import org.junit.jupiter.api.Test;
-import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTests {
@@ -14,7 +10,7 @@ public class BoardTests {
         BoardSize boardSize = new BoardSize(3, 3);
         Board<Integer> board = new Board<>(boardSize);
 
-        board.fill(pos -> pos.getIndex());
+        board.fill(Position::getIndex);
 
         for (int i = 0; i < boardSize.rows(); i++) {
             for (int j = 0; j < boardSize.columns(); j++) {
@@ -27,7 +23,7 @@ public class BoardTests {
     void replaceCell_isReplaced_isTrue() {
         BoardSize boardSize = new BoardSize(3, 3);
         Board<Integer> board = new Board<>(boardSize);
-        board.fill(pos -> pos.getIndex());
+        board.fill(Position::getIndex);
 
         Position position = new Position(1, 1, boardSize);
         int newValue = 99;
@@ -40,7 +36,7 @@ public class BoardTests {
     void lijst_kopieerdJuist_isTrue() {
         BoardSize boardSize = new BoardSize(3, 3);
         Board<Integer> board1 = new Board<>(boardSize);
-        board1.fill(pos -> pos.getIndex());
+        board1.fill(Position::getIndex);
         Board<Integer> board2 = new Board<>(boardSize);
 
         board1.copyTo(board2);

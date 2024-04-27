@@ -1,37 +1,58 @@
 package be.kuleuven.candycrush.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 public class Board<E> {
-    private ArrayList<E> cells;
-    private BoardSize boardSize;
+
+
+    private final Map<Position, E> cells;
+    private final Map<E, Position> positions;
+    private final BoardSize boardSize;
 
     public Board(BoardSize boardSize) {
         this.boardSize = boardSize;
-        cells = new ArrayList<>();
+        cells = new HashMap<>();
+        positions = new HashMap<>();
     }
     public BoardSize getBoardSize() {
         return boardSize;
     }
 
-    public Iterator<E> getCells(){
-        return cells.iterator();
+    public Map<Position, E> getCells(){
+        return cells;
+    }
+
+    public Map<E, Position> getPositions(){
+        return positions;
     }
 
     public E getCellAt(Position position){
-        return cells.get(position.getIndex());
+        return cells.get(position);
+    }
+
+    public Map<E, Position> getPositionsOfElement(E object){
+        Map<E, Position> positions = getPositions();
+        Map<E, Position> result = new HashMap<>();
+        for (int i = 0; i < positions.size(); i++){
+            if (positions.get(i).equals(object)){
+                Position position = positions.get(i);
+                result.put(getCellAt(position), position);
+            }
+        }
+        return Collections.unmodifiableMap(result);
     }
 
     public void replaceCellAt(Position position, E newCell){
-        cells.set(position.getIndex(), newCell);
+        cells.put(position, newCell);
+        positions.put(newCell, position);
     }
 
     public void fill(Function<Position, E> cellCreator){
-        for (int i = 0; i  <boardSize.columns() *  boardSize.rows(); i++) {
-            cells.add(cellCreator.apply(Position.fromIndex(i, boardSize)));
+        for (int i = 0; i < boardSize.columns() * boardSize.rows(); i++) {
+            Position position = Position.fromIndex(i, boardSize);
+            E cell = cellCreator.apply(position);
+
+            replaceCellAt(position, cell);
         }
     }
 
@@ -39,8 +60,8 @@ public class Board<E> {
         if(!(boardSize.equals(otherBoard.getBoardSize()))){
             throw new RuntimeException("Boards not same size");
         }
-        for (int i = 0; i <boardSize.columns() *  boardSize.rows(); i++){
-            otherBoard.cells.add(cells.get(i));
+        for (Position position : cells.keySet()){
+            otherBoard.replaceCellAt(position, this.cells.get(position));
         }
     }
 

@@ -9,13 +9,13 @@ import javafx.scene.shape.Shape;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 
-import java.util.Iterator;
+import java.util.Map;
 
 public class CandycrushView extends Region {
 
-    private CandycrushModel model;
-    private int widthCandy;
-    private int heigthCandy;
+    private final CandycrushModel model;
+    private final int widthCandy;
+    private final int heigthCandy;
 
     public CandycrushView(CandycrushModel model) {
         this.model = model;
@@ -27,16 +27,14 @@ public class CandycrushView extends Region {
         getChildren().clear();
         int i = 0;
         int j = 0;
-        Iterator<Candy> iter = model.getSpeelbord().getCells();
+        Map<Position, Candy> cells = model.getSpeelbord().getCells();
 
-        while(iter.hasNext()) {
-            Candy candy = iter.next();
-
-            Rectangle rectangle = new Rectangle(i * widthCandy, j * heigthCandy, widthCandy,heigthCandy);
+        for (Position position : cells.keySet()){
+            Rectangle rectangle = new Rectangle(position.columnNr() * widthCandy, position.rowNr() * heigthCandy, widthCandy,heigthCandy);
             rectangle.setFill(Color.TRANSPARENT);
             rectangle.setStroke(Color.BLACK);
 
-            Position position = new Position(j, i, model.getBoardSize());
+            Candy candy = cells.get(position);
             Node node = makeCandyShape(position, candy);
 
             getChildren().addAll(rectangle,node);
@@ -74,7 +72,7 @@ public class CandycrushView extends Region {
         int y = position.rowNr()*heigthCandy;
         Shape newCandy = null;
         if (candy instanceof NormalCandy){
-            newCandy = new Circle(x+widthCandy/2, y+heigthCandy/2, widthCandy/2);
+            newCandy = new Circle(x+ (double) widthCandy /2, y+ (double) heigthCandy /2, (double) widthCandy /2);
             newCandy.setFill(candy.color());
         }
         else{

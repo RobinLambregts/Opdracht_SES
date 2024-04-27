@@ -3,11 +3,9 @@ package be.kuleuven.candycrush;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import be.kuleuven.candycrush.model.BoardSize;
 import be.kuleuven.candycrush.model.CandycrushModel;
 import be.kuleuven.candycrush.model.Position;
 import be.kuleuven.candycrush.view.CandycrushView;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
