@@ -1,6 +1,7 @@
 package be.kuleuven.candycrush.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public record BoardSize(int rows, int columns) {
     public BoardSize {
@@ -8,7 +9,7 @@ public record BoardSize(int rows, int columns) {
         if (columns <= 0) throw new IllegalArgumentException("Columns must be larger than 0");
     }
 
-    public Iterable<Position> positions(){
+    public Collection<Position> positions(){
         ArrayList<Position> result = new ArrayList<>();
         BoardSize size = new BoardSize(rows, columns);
         for(int i = 0; i < rows*columns; i++){

@@ -1,6 +1,9 @@
 package be.kuleuven.candycrush.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.stream.Stream;
 
 public record Position(int rowNr, int columnNr, BoardSize boardsize) {
     public Position {
@@ -26,7 +29,7 @@ public record Position(int rowNr, int columnNr, BoardSize boardsize) {
     }
 
     public ArrayList<Position> neighborPositions(){
-        ArrayList<Position> result = new ArrayList();
+        ArrayList<Position> result = new ArrayList<>();
 
         int[][] directions = {{-1,0},{1,0},{0,-1},{0,1},{1,1},{1,-1},{-1,1},{-1,-1}};
         for (int[] dir : directions){
@@ -43,5 +46,46 @@ public record Position(int rowNr, int columnNr, BoardSize boardsize) {
     }
 
     public boolean isLastColumn(){return (columnNr == boardsize().columns());}
+
+    public Stream<Position> walkRight() {
+        Collection<Position> positions = boardsize.positions();
+        int currentRow = this.rowNr();
+        int currentColumn = this.columnNr();
+
+        return positions.stream()
+                .filter(position -> position.rowNr() == currentRow && position.columnNr() > currentColumn)
+                .sorted(Comparator.comparingInt(Position::columnNr));
+    }
+
+    public Stream<Position> walkLeft() {
+        Collection<Position> positions = boardsize.positions();
+        int currentRow = this.rowNr();
+        int currentColumn = this.columnNr();
+
+        return positions.stream()
+                .filter(position -> position.rowNr() == currentRow && position.columnNr() < currentColumn)
+                .sorted(Comparator.comparingInt(Position::columnNr).reversed());
+    }
+
+
+    public Stream<Position> walkUp() {
+        Collection<Position> positions = boardsize.positions();
+        int currentRow = this.rowNr();
+        int currentColumn = this.columnNr();
+
+        return positions.stream()
+                .filter(position -> position.rowNr() < currentRow && position.columnNr() == currentColumn)
+                .sorted(Comparator.comparingInt(Position::rowNr).reversed());
+    }
+
+    public Stream<Position> walkDown() {
+        Collection<Position> positions = boardsize.positions();
+        int currentRow = this.rowNr();
+        int currentColumn = this.columnNr();
+
+        return positions.stream()
+                .filter(position -> position.rowNr() > currentRow && position.columnNr() == currentColumn)
+                .sorted(Comparator.comparingInt(Position::columnNr));
+    }
 }
 
