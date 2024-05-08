@@ -1,9 +1,14 @@
 package be.kuleuven.candycrush.model;
 
 import be.kuleuven.candycrush.CandycrushController;
+import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CandycrushModelTests {
 
@@ -89,5 +94,46 @@ public class CandycrushModelTests {
         Position position5 = new Position(1,1,boardSize);
         test.add(position5);
         assert (position.neighborPositions().equals(test));
+    }
+
+    @Test
+    void firstTwoHaveCandy_ShouldReturnTrue_WhenFirstTwoCandiesAreEqual() {
+        CandycrushModel model = new CandycrushModel("TestPlayer");
+
+        Position position1 = new Position(0, 0, model.getBoardSize());
+        Position position2 = new Position(0, 1, model.getBoardSize());
+        Position position3 = new Position(0, 2, model.getBoardSize());
+        Position position4 = new Position(1, 0, model.getBoardSize());
+
+        Candy candy1 = new NormalCandy(Color.PINK);
+        Candy candy2 = new NormalCandy(Color.BLUE);
+
+        model.makePlayBoard(position1, candy1);
+        model.makePlayBoard(position2, candy1);
+        model.makePlayBoard(position3, candy2);
+        model.makePlayBoard(position4, candy2);
+
+        assertTrue(model.firstTwoHaveCandy(candy1, Stream.of(position1, position2, position3, position4)));
+    }
+
+    @Test
+    void firstTwoHaveCandy_ShouldReturnFalse_WhenFirstTwoCandiesAreDifferent() {
+        CandycrushModel model = new CandycrushModel("TestPlayer");
+
+        Position position1 = new Position(0, 0, model.getBoardSize());
+        Position position2 = new Position(0, 1, model.getBoardSize());
+        Position position3 = new Position(0, 2, model.getBoardSize());
+        Position position4 = new Position(0, 3, model.getBoardSize());
+
+        Candy candy1 = new NormalCandy(Color.PINK);
+        Candy candy2 = new NormalCandy(Color.BLUE);
+
+        model.makePlayBoard(position1, candy1);
+        model.makePlayBoard(position2, candy2);
+        model.makePlayBoard(position3, candy1);
+        model.makePlayBoard(position4, candy1);
+
+        assertFalse(model.firstTwoHaveCandy(candy1, Stream.of(position1, position2, position3, position4)));
+        assertFalse(model.firstTwoHaveCandy(candy2, Stream.of(position1, position2, position3, position4)));
     }
 }

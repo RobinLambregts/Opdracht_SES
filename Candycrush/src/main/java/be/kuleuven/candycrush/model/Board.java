@@ -12,8 +12,8 @@ public class Board<E> {
 
     public Board(BoardSize boardSize) {
         this.boardSize = boardSize;
-        cells = new ConcurrentHashMap<>();
-        positions = new ConcurrentHashMap<>();
+        this.cells = new ConcurrentHashMap<>();
+        this.positions = new ConcurrentHashMap<>();
     }
 
     public BoardSize getBoardSize() {
@@ -22,10 +22,6 @@ public class Board<E> {
 
     public Map<Position, E> getCells() {
         return Collections.unmodifiableMap(cells);
-    }
-
-    public Map<E, Position> getPositions() {
-        return Collections.unmodifiableMap(positions);
     }
 
     public synchronized E getCellAt(Position position) {

@@ -90,6 +90,8 @@ public class CandycrushModel {
                 speelbord.replaceCellAt(i, randomCandy());
                 score++;
             }
+            boolean geupdate = updateBoard();
+            System.out.println("geupdate: " + geupdate);
         } else {
             System.out.println("model:candyWithPositionSelected:positionWasMinusOne");
         }
@@ -124,38 +126,42 @@ public class CandycrushModel {
     }
 
     public Set<List<Position>> findAllMatches(){
-        Stream<List<Position>> horizontalMatches = horizontalStartingPositions()
-                .map(this::longestMatchToRight);
+        List<List<Position>> allMatches = Stream.concat(horizontalStartingPositions(), verticalStartingPositions())
+                .flatMap(p -> {
+                    List<Position> horizontalMatch = longestMatchToRight(p);
+                    List<Position> verticalMatch = longestMatchDown(p);
+                    return Stream.of(horizontalMatch, verticalMatch);
+                })
+                .filter(l -> l.size() > 2)
+                .sorted((match1, match2) -> match2.size() - match1.size())
+                .toList();
 
-        Stream<List<Position>> verticalMatches = verticalStartingPositions()
-                .map(this::longestMatchDown);
-
-        return Stream.concat(horizontalMatches, verticalMatches)
+        return allMatches.stream()
+                .filter(match -> allMatches.stream()
+                        .noneMatch(longerMatch -> longerMatch.size() > match.size() && longerMatch.containsAll(match)))
                 .collect(Collectors.toSet());
     }
 
     public boolean firstTwoHaveCandy(Candy candy, Stream<Position> positions){
-
-        return positions.limit(2)
+        return positions.sorted(Comparator.comparing(Position::getIndex)).limit(2)
                 .allMatch(p -> candy.equals(speelbord.getCellAt(p)));
     }
 
-
     public Stream<Position> horizontalStartingPositions() {
-        Map<Candy, Position> allPositions = speelbord.getPositions();
-        return allPositions.values().stream()
+        Collection<Position> allPositions = boardSize.positions();
+        return allPositions.stream()
                 .filter(pos -> {
-                    Stream<Position> rightNeighbors = pos.walkRight();
-                    return firstTwoHaveCandy(speelbord.getCellAt(pos), rightNeighbors);
+                    Stream<Position> leftNeighbors = pos.walkLeft();
+                    return !firstTwoHaveCandy(speelbord.getCellAt(pos), leftNeighbors);
                 });
     }
 
     public Stream<Position> verticalStartingPositions() {
-        Map<Candy, Position> allPositions = speelbord.getPositions();
-        return allPositions.values().stream()
+        Collection<Position> allPositions = boardSize.positions();
+        return allPositions.stream()
                 .filter(pos -> {
-                    Stream<Position> bottomNeighbors = pos.walkDown();
-                    return firstTwoHaveCandy(speelbord.getCellAt(pos), bottomNeighbors);
+                    Stream<Position> upNeighbors = pos.walkUp();
+                    return !firstTwoHaveCandy(speelbord.getCellAt(pos), upNeighbors);
                 });
     }
 
@@ -163,7 +169,7 @@ public class CandycrushModel {
         Stream<Position> allPositions = pos.walkRight();
 
         return allPositions
-                .takeWhile(p -> speelbord.getCellAt(p) == speelbord.getCellAt(pos))
+                .takeWhile(p -> speelbord.getCellAt(p) == speelbord.getCellAt(pos) && allPositions.count() > 2)
                 .collect(Collectors.toList());
     }
 
@@ -171,7 +177,47 @@ public class CandycrushModel {
         Stream<Position> allPositions = pos.walkDown();
 
         return allPositions
-                .takeWhile(p -> speelbord.getCellAt(p) == speelbord.getCellAt(pos))
+                .takeWhile(p -> speelbord.getCellAt(p) == speelbord.getCellAt(pos) && allPositions.count() > 2)
                 .collect(Collectors.toList());
+    }
+
+    public boolean sameRow(List<Position> match) {
+        return match.get(0).rowNr() == match.get(1).rowNr();
+    }
+
+    public void clearMatch(List<Position> match){
+        if (match.size() <= 2) {return;}
+
+        for (Position i : match){
+            if (sameRow(match)){
+                List<Position> verticalMatch = longestMatchDown(i);
+                clearMatch(verticalMatch);
+            }
+            else{
+                List<Position> horizontalMatch = longestMatchToRight(i);
+                clearMatch(horizontalMatch);
+            }
+            speelbord.replaceCellAt(i, null);
+        }
+    }
+
+    public void fallDownTo(Position pos){
+        if (pos.rowNr() == 0) {return;}
+        Position positionUp = new Position(pos.rowNr() -1, pos.columnNr(), boardSize);
+        speelbord.replaceCellAt(pos, speelbord.getCellAt(positionUp));
+        speelbord.replaceCellAt(positionUp, null);
+        fallDownTo(positionUp);
+    }
+
+    public boolean updateBoard(){
+        Set<List<Position>> matches = findAllMatches();
+        if (matches.isEmpty()) {return false;}
+        for (List<Position> match : matches) {
+            clearMatch(match);
+            for (Position i : match) {
+                fallDownTo(i);
+            }
+        }
+        return true;
     }
 }

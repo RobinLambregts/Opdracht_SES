@@ -38,13 +38,6 @@ public class CandycrushView extends Region {
             Node node = makeCandyShape(position, candy);
 
             getChildren().addAll(rectangle,node);
-
-            if (i == model.getBoardSize().rows() - 1) {
-                i = 0;
-                j++;
-            } else {
-                i++;
-            }
         }
     }
 
@@ -74,6 +67,9 @@ public class CandycrushView extends Region {
         if (candy instanceof NormalCandy){
             newCandy = new Circle(x+ (double) widthCandy /2, y+ (double) heigthCandy /2, (double) widthCandy /2);
             newCandy.setFill(candy.color());
+        }
+        else if (model.getSpeelbord().getCellAt(position).equals(null)){
+            newCandy = null;
         }
         else{
             newCandy = new Rectangle(x,y,widthCandy,heigthCandy);
