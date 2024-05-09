@@ -83,18 +83,19 @@ public class CandycrushModel {
     }
 
     public void candyWithPositionSelected(Position position) {
-        Position invalid = new Position(-1,-1,boardSize);
-        if (!Objects.equals(position, invalid)) {
-            ArrayList<Position> NeigborIds = getSameNeighbourPositions(position);
-            for (Position i : NeigborIds) {
-                speelbord.replaceCellAt(i, randomCandy());
-                score++;
-            }
-            boolean geupdate = updateBoard();
-            System.out.println("geupdate: " + geupdate);
-        } else {
-            System.out.println("model:candyWithPositionSelected:positionWasMinusOne");
-        }
+        updateBoard();
+//        Position invalid = new Position(-1,-1,boardSize);
+//        if (!Objects.equals(position, invalid)) {
+//            ArrayList<Position> NeigborIds = getSameNeighbourPositions(position);
+//            for (Position i : NeigborIds) {
+//                speelbord.replaceCellAt(i, randomCandy());
+//                score++;
+//            }
+//            boolean geupdate = updateBoard();
+//            System.out.println("geupdate: " + geupdate);
+//        } else {
+//            System.out.println("model:candyWithPositionSelected:positionWasMinusOne");
+//        }
     }
 
     ArrayList<Position> getSameNeighbourPositions(Position position){
@@ -129,21 +130,24 @@ public class CandycrushModel {
         List<List<Position>> allMatches = Stream.concat(horizontalStartingPositions(), verticalStartingPositions())
                 .flatMap(p -> {
                     List<Position> horizontalMatch = longestMatchToRight(p);
+                    horizontalMatch.add(p);
                     List<Position> verticalMatch = longestMatchDown(p);
+                    verticalMatch.add(p);
                     return Stream.of(horizontalMatch, verticalMatch);
                 })
-                .filter(l -> l.size() > 2)
+                .filter(m -> m.size() > 2)
                 .sorted((match1, match2) -> match2.size() - match1.size())
                 .toList();
+        System.out.println(allMatches);
 
         return allMatches.stream()
                 .filter(match -> allMatches.stream()
-                        .noneMatch(longerMatch -> longerMatch.size() > match.size() && longerMatch.containsAll(match)))
+                        .noneMatch(longerMatch -> longerMatch.size() > match.size() && new HashSet<>(longerMatch).containsAll(match)))
                 .collect(Collectors.toSet());
     }
 
     public boolean firstTwoHaveCandy(Candy candy, Stream<Position> positions){
-        return positions.sorted(Comparator.comparing(Position::getIndex)).limit(2)
+        return positions.limit(1)
                 .allMatch(p -> candy.equals(speelbord.getCellAt(p)));
     }
 
@@ -166,18 +170,14 @@ public class CandycrushModel {
     }
 
     public List<Position> longestMatchToRight(Position pos) {
-        Stream<Position> allPositions = pos.walkRight();
-
-        return allPositions
-                .takeWhile(p -> speelbord.getCellAt(p) == speelbord.getCellAt(pos) && allPositions.count() > 2)
+        return pos.walkRight()
+                .takeWhile(p -> speelbord.getCellAt(p).equals(speelbord.getCellAt(pos)))
                 .collect(Collectors.toList());
     }
 
     public List<Position> longestMatchDown(Position pos) {
-        Stream<Position> allPositions = pos.walkDown();
-
-        return allPositions
-                .takeWhile(p -> speelbord.getCellAt(p) == speelbord.getCellAt(pos) && allPositions.count() > 2)
+        return pos.walkDown()
+                .takeWhile(p -> speelbord.getCellAt(p).equals(speelbord.getCellAt(pos)))
                 .collect(Collectors.toList());
     }
 
@@ -197,7 +197,7 @@ public class CandycrushModel {
                 List<Position> horizontalMatch = longestMatchToRight(i);
                 clearMatch(horizontalMatch);
             }
-            speelbord.replaceCellAt(i, null);
+            speelbord.replaceCellAt(i, new EmptyCandy(Color.TRANSPARENT));
         }
     }
 
@@ -205,7 +205,7 @@ public class CandycrushModel {
         if (pos.rowNr() == 0) {return;}
         Position positionUp = new Position(pos.rowNr() -1, pos.columnNr(), boardSize);
         speelbord.replaceCellAt(pos, speelbord.getCellAt(positionUp));
-        speelbord.replaceCellAt(positionUp, null);
+        speelbord.replaceCellAt(positionUp, new EmptyCandy(Color.TRANSPARENT));
         fallDownTo(positionUp);
     }
 
@@ -214,9 +214,9 @@ public class CandycrushModel {
         if (matches.isEmpty()) {return false;}
         for (List<Position> match : matches) {
             clearMatch(match);
-            for (Position i : match) {
-                fallDownTo(i);
-            }
+            //for (Position i : match) {
+                //fallDownTo(i);
+            //}
         }
         return true;
     }
