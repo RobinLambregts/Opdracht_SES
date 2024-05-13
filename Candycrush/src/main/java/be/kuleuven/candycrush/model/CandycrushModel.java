@@ -1,5 +1,6 @@
 package be.kuleuven.candycrush.model;
 
+import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 
 import java.util.*;
@@ -16,7 +17,7 @@ public class CandycrushModel {
 
     public CandycrushModel(String speler) {
         this.speler = speler;
-        boardSize = new BoardSize(5,5);
+        boardSize = new BoardSize(8,8);
         speelbord = new Board<>(boardSize);
         score = 0;
 
@@ -130,9 +131,7 @@ public class CandycrushModel {
         List<List<Position>> allMatches = Stream.concat(horizontalStartingPositions(), verticalStartingPositions())
                 .flatMap(p -> {
                     List<Position> horizontalMatch = longestMatchToRight(p);
-                    horizontalMatch.add(p);
                     List<Position> verticalMatch = longestMatchDown(p);
-                    verticalMatch.add(p);
                     return Stream.of(horizontalMatch, verticalMatch);
                 })
                 .filter(m -> m.size() > 2)
@@ -152,8 +151,9 @@ public class CandycrushModel {
     }
 
     public Stream<Position> horizontalStartingPositions() {
-        Collection<Position> allPositions = boardSize.positions();
+        Collection<Position> allPositions = boardSize.positions(); // geeft ni de geupdate dingen terug
         return allPositions.stream()
+                .filter(pos -> !speelbord.getCellAt(pos).equals(new EmptyCandy(Color.TRANSPARENT)))
                 .filter(pos -> {
                     Stream<Position> leftNeighbors = pos.walkLeft();
                     return !firstTwoHaveCandy(speelbord.getCellAt(pos), leftNeighbors);
@@ -161,8 +161,9 @@ public class CandycrushModel {
     }
 
     public Stream<Position> verticalStartingPositions() {
-        Collection<Position> allPositions = boardSize.positions();
+        Collection<Position> allPositions = boardSize.positions(); // geeft ni de geupdate dingen terug
         return allPositions.stream()
+                .filter(pos -> !speelbord.getCellAt(pos).equals(new EmptyCandy(Color.TRANSPARENT)))
                 .filter(pos -> {
                     Stream<Position> upNeighbors = pos.walkUp();
                     return !firstTwoHaveCandy(speelbord.getCellAt(pos), upNeighbors);
@@ -190,12 +191,20 @@ public class CandycrushModel {
 
         for (Position i : match){
             if (sameRow(match)){
-                List<Position> verticalMatch = longestMatchDown(i);
-                clearMatch(verticalMatch);
+                Stream<Position> verticalDownMatch = i.walkDown()
+                        .takeWhile(pos -> speelbord.getCellAt(i).equals(speelbord.getCellAt(pos)));
+                Stream<Position> verticalUpMatch = i.walkUp()
+                        .takeWhile(pos -> speelbord.getCellAt(i).equals(speelbord.getCellAt(pos)));
+
+                clearMatch(Stream.concat(verticalUpMatch, verticalDownMatch).toList());
             }
             else{
-                List<Position> horizontalMatch = longestMatchToRight(i);
-                clearMatch(horizontalMatch);
+                Stream<Position> horizontalMatchRight = i.walkRight()
+                        .takeWhile(pos -> speelbord.getCellAt(i).equals(speelbord.getCellAt(pos)));
+                Stream<Position> horizontalMatchLeft = i.walkLeft()
+                        .takeWhile(pos -> speelbord.getCellAt(i).equals(speelbord.getCellAt(pos)));
+
+                clearMatch(Stream.concat(horizontalMatchLeft, horizontalMatchRight).toList());
             }
             speelbord.replaceCellAt(i, new EmptyCandy(Color.TRANSPARENT));
         }
@@ -203,21 +212,27 @@ public class CandycrushModel {
 
     public void fallDownTo(Position pos){
         if (pos.rowNr() == 0) {return;}
+
         Position positionUp = new Position(pos.rowNr() -1, pos.columnNr(), boardSize);
         speelbord.replaceCellAt(pos, speelbord.getCellAt(positionUp));
         speelbord.replaceCellAt(positionUp, new EmptyCandy(Color.TRANSPARENT));
         fallDownTo(positionUp);
     }
 
-    public boolean updateBoard(){
+    public boolean updateBoard() {
         Set<List<Position>> matches = findAllMatches();
-        if (matches.isEmpty()) {return false;}
-        for (List<Position> match : matches) {
-            clearMatch(match);
-            //for (Position i : match) {
-                //fallDownTo(i);
-            //}
+        if (matches.isEmpty()) {
+            return false;
+        } else {
+            for (List<Position> match : matches) {
+                clearMatch(match);
+                for (Position i : match) {
+                    score++;
+                    fallDownTo(i);
+                }
+            }
+            updateBoard();
+            return true;
         }
-        return true;
     }
 }

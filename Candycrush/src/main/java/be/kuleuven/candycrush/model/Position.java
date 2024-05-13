@@ -53,7 +53,7 @@ public record Position(int rowNr, int columnNr, BoardSize boardsize) {
         int currentColumn = this.columnNr();
 
         return positions.stream()
-                .filter(position -> position.rowNr() == currentRow && position.columnNr() > currentColumn)
+                .filter(position -> position.rowNr() == currentRow && position.columnNr() >= currentColumn)
                 .sorted(Comparator.comparingInt(Position::columnNr));
     }
 
@@ -63,7 +63,7 @@ public record Position(int rowNr, int columnNr, BoardSize boardsize) {
         int currentColumn = this.columnNr();
 
         return positions.stream()
-                .filter(position -> position.rowNr() == currentRow && position.columnNr() < currentColumn)
+                .filter(position -> position.rowNr() == currentRow && position.columnNr() <= currentColumn)
                 .sorted(Comparator.comparingInt(Position::columnNr).reversed());
     }
 
@@ -74,7 +74,7 @@ public record Position(int rowNr, int columnNr, BoardSize boardsize) {
         int currentColumn = this.columnNr();
 
         return positions.stream()
-                .filter(position -> position.rowNr() < currentRow && position.columnNr() == currentColumn)
+                .filter(position -> position.rowNr() <= currentRow && position.columnNr() == currentColumn)
                 .sorted(Comparator.comparingInt(Position::rowNr).reversed());
     }
 
@@ -84,7 +84,7 @@ public record Position(int rowNr, int columnNr, BoardSize boardsize) {
         int currentColumn = this.columnNr();
 
         return positions.stream()
-                .filter(position -> position.rowNr() < currentRow && position.columnNr() == currentColumn)
+                .filter(position -> position.rowNr() <= currentRow && position.columnNr() == currentColumn)
                 .sorted(Comparator.comparingInt(Position::columnNr));
     }
 }
