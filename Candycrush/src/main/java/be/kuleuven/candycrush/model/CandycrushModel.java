@@ -9,14 +9,14 @@ import java.util.stream.Stream;
 
 public class CandycrushModel {
     private final String speler;
-    private final Board<Candy> speelbord;
+    private Board<Candy> speelbord;
     public static BoardSize boardSize;
     private int score;
     private boolean gestart = false;
 
     public CandycrushModel(String speler) {
         this.speler = speler;
-        boardSize = new BoardSize(8,8);
+        boardSize = new BoardSize(5,5);
         speelbord = new Board<>(boardSize);
         score = 0;
 
@@ -98,17 +98,17 @@ public class CandycrushModel {
 //        }
     }
 
-    ArrayList<Position> getSameNeighbourPositions(Position position){
-        ArrayList<Position> result = new ArrayList<>();
-        ArrayList<Position> neighbors = position.neighborPositions();
-        result.add(position);
-        for (Position i : neighbors){
-            if (speelbord.getCellAt(position).equals(speelbord.getCellAt(i)) && position.validPosition(i.rowNr(), i.columnNr())){
-                result.add(i);
-            }
-        }
-        return result;
-    }
+//    ArrayList<Position> getSameNeighbourPositions(Position position){
+//        ArrayList<Position> result = new ArrayList<>();
+//        ArrayList<Position> neighbors = position.neighborPositions();
+//        result.add(position);
+//        for (Position i : neighbors){
+//            if (speelbord.getCellAt(position).equals(speelbord.getCellAt(i)) && position.validPosition(i.rowNr(), i.columnNr())){
+//                result.add(i);
+//            }
+//        }
+//        return result;
+//    }
 
     public Position getPosition(int row, int column){
         return new Position(row, column, boardSize);
@@ -181,7 +181,7 @@ public class CandycrushModel {
     }
 
     public void clearMatch(List<Position> match){
-        List<Position> copy = new ArrayList<>(match); // Match is immutable dus maak een copy
+        List<Position> copy = new ArrayList<>(match);
 
         if(copy.isEmpty()) return;
         Position first = copy.getFirst();
