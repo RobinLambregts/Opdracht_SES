@@ -1,6 +1,5 @@
 package be.kuleuven.candycrush.model;
 
-import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 
 import java.util.*;
@@ -137,7 +136,6 @@ public class CandycrushModel {
                 .filter(m -> m.size() > 2)
                 .sorted((match1, match2) -> match2.size() - match1.size())
                 .toList();
-        System.out.println(allMatches);
 
         return allMatches.stream()
                 .filter(match -> allMatches.stream()
@@ -146,27 +144,27 @@ public class CandycrushModel {
     }
 
     public boolean firstTwoHaveCandy(Candy candy, Stream<Position> positions){
-        return positions.limit(1)
+        return positions.limit(2)
                 .allMatch(p -> candy.equals(speelbord.getCellAt(p)));
     }
 
     public Stream<Position> horizontalStartingPositions() {
-        Collection<Position> allPositions = boardSize.positions(); // geeft ni de geupdate dingen terug
+        Collection<Position> allPositions = boardSize.positions();
         return allPositions.stream()
                 .filter(pos -> !speelbord.getCellAt(pos).equals(new EmptyCandy(Color.TRANSPARENT)))
                 .filter(pos -> {
-                    Stream<Position> leftNeighbors = pos.walkLeft();
-                    return !firstTwoHaveCandy(speelbord.getCellAt(pos), leftNeighbors);
+                    Stream<Position> leftNeighbor = pos.walkLeft();
+                    return !firstTwoHaveCandy(speelbord.getCellAt(pos), leftNeighbor);
                 });
     }
 
     public Stream<Position> verticalStartingPositions() {
-        Collection<Position> allPositions = boardSize.positions(); // geeft ni de geupdate dingen terug
+        Collection<Position> allPositions = boardSize.positions();
         return allPositions.stream()
                 .filter(pos -> !speelbord.getCellAt(pos).equals(new EmptyCandy(Color.TRANSPARENT)))
                 .filter(pos -> {
-                    Stream<Position> upNeighbors = pos.walkUp();
-                    return !firstTwoHaveCandy(speelbord.getCellAt(pos), upNeighbors);
+                    Stream<Position> upNeighbor = pos.walkUp();
+                    return !firstTwoHaveCandy(speelbord.getCellAt(pos), upNeighbor);
                 });
     }
 
@@ -182,32 +180,15 @@ public class CandycrushModel {
                 .collect(Collectors.toList());
     }
 
-    public boolean sameRow(List<Position> match) {
-        return match.get(0).rowNr() == match.get(1).rowNr();
-    }
-
     public void clearMatch(List<Position> match){
-        if (match.size() <= 2) {return;}
+        List<Position> copy = new ArrayList<>(match); // Match is immutable dus maak een copy
 
-        for (Position i : match){
-            if (sameRow(match)){
-                Stream<Position> verticalDownMatch = i.walkDown()
-                        .takeWhile(pos -> speelbord.getCellAt(i).equals(speelbord.getCellAt(pos)));
-                Stream<Position> verticalUpMatch = i.walkUp()
-                        .takeWhile(pos -> speelbord.getCellAt(i).equals(speelbord.getCellAt(pos)));
-
-                clearMatch(Stream.concat(verticalUpMatch, verticalDownMatch).toList());
-            }
-            else{
-                Stream<Position> horizontalMatchRight = i.walkRight()
-                        .takeWhile(pos -> speelbord.getCellAt(i).equals(speelbord.getCellAt(pos)));
-                Stream<Position> horizontalMatchLeft = i.walkLeft()
-                        .takeWhile(pos -> speelbord.getCellAt(i).equals(speelbord.getCellAt(pos)));
-
-                clearMatch(Stream.concat(horizontalMatchLeft, horizontalMatchRight).toList());
-            }
-            speelbord.replaceCellAt(i, new EmptyCandy(Color.TRANSPARENT));
-        }
+        if(copy.isEmpty()) return;
+        Position first = copy.getFirst();
+        speelbord.replaceCellAt(first, new EmptyCandy(Color.TRANSPARENT));
+        System.out.println(copy);
+        copy.removeFirst();
+        clearMatch(copy);
     }
 
     public void fallDownTo(Position pos){

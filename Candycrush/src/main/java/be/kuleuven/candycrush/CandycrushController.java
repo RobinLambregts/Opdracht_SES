@@ -1,9 +1,7 @@
 package be.kuleuven.candycrush;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import be.kuleuven.candycrush.model.CandycrushModel;
 import be.kuleuven.candycrush.model.Position;

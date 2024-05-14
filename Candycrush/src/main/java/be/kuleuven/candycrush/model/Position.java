@@ -48,43 +48,26 @@ public record Position(int rowNr, int columnNr, BoardSize boardsize) {
     public boolean isLastColumn(){return (columnNr == boardsize().columns());}
 
     public Stream<Position> walkRight() {
-        Collection<Position> positions = boardsize.positions();
-        int currentRow = this.rowNr();
-        int currentColumn = this.columnNr();
-
-        return positions.stream()
-                .filter(position -> position.rowNr() == currentRow && position.columnNr() >= currentColumn)
+        return boardsize.positions().stream()
+                .filter(position -> position.rowNr() == this.rowNr() && position.columnNr() >= this.columnNr())
                 .sorted(Comparator.comparingInt(Position::columnNr));
     }
 
     public Stream<Position> walkLeft() {
-        Collection<Position> positions = boardsize.positions();
-        int currentRow = this.rowNr();
-        int currentColumn = this.columnNr();
-
-        return positions.stream()
-                .filter(position -> position.rowNr() == currentRow && position.columnNr() <= currentColumn)
+        return boardsize.positions().stream()
+                .filter(position -> position.rowNr() == this.rowNr() && position.columnNr() <= this.columnNr())
                 .sorted(Comparator.comparingInt(Position::columnNr).reversed());
     }
 
-
     public Stream<Position> walkUp() {
-        Collection<Position> positions = boardsize.positions();
-        int currentRow = this.rowNr();
-        int currentColumn = this.columnNr();
-
-        return positions.stream()
-                .filter(position -> position.rowNr() <= currentRow && position.columnNr() == currentColumn)
+        return boardsize.positions().stream()
+                .filter(position -> position.rowNr() >= this.rowNr() && position.columnNr() == this.columnNr())
                 .sorted(Comparator.comparingInt(Position::rowNr).reversed());
     }
 
     public Stream<Position> walkDown() {
-        Collection<Position> positions = boardsize.positions();
-        int currentRow = this.rowNr();
-        int currentColumn = this.columnNr();
-
-        return positions.stream()
-                .filter(position -> position.rowNr() <= currentRow && position.columnNr() == currentColumn)
+        return boardsize.positions().stream()
+                .filter(position -> position.rowNr() <= this.rowNr() && position.columnNr() == this.columnNr())
                 .sorted(Comparator.comparingInt(Position::columnNr));
     }
 }
