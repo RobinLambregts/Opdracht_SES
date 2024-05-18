@@ -25,8 +25,6 @@ public class CandycrushView extends Region {
 
     public void update(){
         getChildren().clear();
-        int i = 0;
-        int j = 0;
         Map<Position, Candy> cells = model.getSpeelbord().getCells();
 
         for (Position position : cells.keySet()){
@@ -68,9 +66,6 @@ public class CandycrushView extends Region {
             newCandy = new Circle(x+ (double) widthCandy /2, y+ (double) heigthCandy /2, (double) widthCandy /2);
             newCandy.setFill(candy.color());
         }
-        else if (model.getSpeelbord().getCellAt(position).equals(null)){
-            newCandy = null;
-        }
         else{
             newCandy = new Rectangle(x,y,widthCandy,heigthCandy);
             newCandy.setFill(candy.color());
@@ -79,13 +74,13 @@ public class CandycrushView extends Region {
     }
 
     public void makeBoard(){
-        for (int k = 0; k < model.getBoardSize().columns(); k++) {
-            for (int j = 0; j < model.getBoardSize().rows(); j++) {
-                Position position = new Position(k,j,model.getBoardSize());
-                Candy randomCandy = model.randomCandy();
-                model.makePlayBoard(position, randomCandy);
-            }
-        }
+//        for (int k = 0; k < model.getBoardSize().columns(); k++) {
+//            for (int j = 0; j < model.getBoardSize().rows(); j++) {
+//                Position position = new Position(k,j,model.getBoardSize());
+//                Candy randomCandy = model.randomCandy();
+//                model.makePlayBoard(position, randomCandy);
+//            }
+//        }
         update();
     }
 }

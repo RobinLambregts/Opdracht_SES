@@ -9,14 +9,14 @@ import java.util.stream.Stream;
 
 public class CandycrushModel {
     private final String speler;
-    private Board<Candy> speelbord;
+    private final Board<Candy> speelbord;
     public static BoardSize boardSize;
     private int score;
     private boolean gestart = false;
 
-    public CandycrushModel(String speler) {
+    public CandycrushModel(String speler, int width, int height) {
         this.speler = speler;
-        boardSize = new BoardSize(5,5);
+        boardSize = new BoardSize(width,height);
         speelbord = new Board<>(boardSize);
         score = 0;
 
@@ -55,21 +55,6 @@ public class CandycrushModel {
         return candy;
     }
 
-    public static void main(String[] args) {
-        CandycrushModel model = new CandycrushModel("Robin");
-        int i = 1;
-        while (i < boardSize.rows()*boardSize.columns()) {
-            Candy candy = model.randomCandy();
-            System.out.print(candy);
-            if (i % model.getBoardSize().columns() == 0) {
-                System.out.print("\n");
-                i = 1;
-            }
-            i++;
-        }
-        System.out.print("\n");
-    }
-
     public String getSpeler() {
         return speler;
     }
@@ -83,7 +68,10 @@ public class CandycrushModel {
     }
 
     public void candyWithPositionSelected(Position position) {
-        updateBoard();
+        maximizeScore();
+
+        //updateBoard();
+
 //        Position invalid = new Position(-1,-1,boardSize);
 //        if (!Objects.equals(position, invalid)) {
 //            ArrayList<Position> NeigborIds = getSameNeighbourPositions(position);
@@ -216,4 +204,85 @@ public class CandycrushModel {
             return true;
         }
     }
+
+    public boolean matchAfterSwitch(Position pos1, Position pos2){
+        Candy candy1 = speelbord.getCellAt(pos1);
+        Candy candy2 = speelbord.getCellAt(pos2);
+        speelbord.replaceCellAt(pos1, candy2);
+        speelbord.replaceCellAt(pos2, candy1);
+
+        long matchAfterSwitch = findAllMatches().stream().count();
+
+        speelbord.replaceCellAt(pos1, candy1);
+        speelbord.replaceCellAt(pos2, candy2);
+
+        return matchAfterSwitch > 0;
+    }
+
+    public void switchCandys(Position pos1, Position pos2, Board<Candy> board){
+        Candy tussenCandy = board.getCellAt(pos1);
+        board.replaceCellAt(pos1, board.getCellAt(pos2));
+        board.replaceCellAt(pos2, tussenCandy);
+    }
+
+    public List<Swap> maximizeScore() {
+        List<Swap> bestSequence = new ArrayList<>();
+        maximizeScore(new ArrayList<>(), 0, bestSequence);
+        System.out.println(score);
+        System.out.println(bestSequence);
+        return bestSequence;
+    }
+
+    private void maximizeScore(List<Swap> currentSequence, int currentScore, List<Swap> bestSequence) {
+        Set<List<Position>> matches = findAllMatches();
+        boolean noMatches = false;
+
+        if (matches.isEmpty()) {
+            noMatches = true;
+            for (Position pos1 : boardSize.positions()) {
+                for (Position pos2 : pos1.neighborPositions()) {
+                    if (matchAfterSwitch(pos1, pos2)) {
+                        switchCandys(pos1, pos2, speelbord);
+                        int scoreGain = applyMatches();
+                        currentSequence.add(new Swap(pos1, pos2));
+                        maximizeScore(currentSequence, currentScore + scoreGain, bestSequence);
+                        currentSequence.removeLast();
+                        switchCandys(pos1, pos2, speelbord);
+                    }
+                }
+            }
+        }
+
+        if(!noMatches){
+            updateBoard();
+            maximizeScore(currentSequence, currentScore, bestSequence);
+        }
+
+        if (currentScore > score) {
+            score = currentScore;
+            bestSequence.clear();
+            bestSequence.addAll(currentSequence);
+        } else if (currentScore == score && (bestSequence.isEmpty() || currentSequence.size() < bestSequence.size())) {
+            bestSequence.clear();
+            bestSequence.addAll(currentSequence);
+        }
+        return;
+    }
+
+    private int applyMatches() {
+        int totalRemoved = 0;
+        boolean updated = true;
+        while (updated) {
+            updated = false;
+            Set<List<Position>> matches = findAllMatches();
+            for (List<Position> match : matches) {
+                totalRemoved += match.size();
+                clearMatch(match);
+                match.forEach(this::fallDownTo);
+                updated = true;
+            }
+        }
+        return totalRemoved;
+    }
 }
+

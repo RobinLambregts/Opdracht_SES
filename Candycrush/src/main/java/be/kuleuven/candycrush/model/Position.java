@@ -31,7 +31,7 @@ public record Position(int rowNr, int columnNr, BoardSize boardsize) {
     public ArrayList<Position> neighborPositions(){
         ArrayList<Position> result = new ArrayList<>();
 
-        int[][] directions = {{-1,0},{1,0},{0,-1},{0,1},{1,1},{1,-1},{-1,1},{-1,-1}};
+        int[][] directions = {{-1,0},{1,0},{0,-1},{0,1}};
         for (int[] dir : directions){
             int newRow = rowNr + dir[0];
             int newColumn = columnNr + dir[1];
@@ -46,6 +46,7 @@ public record Position(int rowNr, int columnNr, BoardSize boardsize) {
     }
 
     public boolean isLastColumn(){return (columnNr == boardsize().columns());}
+    public boolean isLastRow(){return (rowNr == boardsize().rows());}
 
     public Stream<Position> walkRight() {
         return boardsize.positions().stream()

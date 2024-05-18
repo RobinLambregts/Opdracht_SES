@@ -23,50 +23,48 @@ public class CandycrushModelTests {
 
     @Test
     public void gegevenNaam_alsDiejuistIs_isTrue() {
-        CandycrushModel model = new CandycrushModel("Robin");
+        CandycrushModel model = new CandycrushModel("Robin", 5, 5);
         String result = model.getSpeler();
         assert (result.equals("Robin"));
     }
 
     @Test
     public void gegevenRowEnColumn_PositionIsJuist_isTrue() {
-        CandycrushModel model = new CandycrushModel("Robin");
-        BoardSize boardsize = new BoardSize(5,5);
-        Position position = new Position(2,2,boardsize);
+        CandycrushModel model = new CandycrushModel("Robin", 5, 5);
+        Position position = new Position(2,2,model.getBoardSize());
         assert (position.equals(model.getPosition(2,2)));
     }
 
     @Test
     public void spellenGegenereerd_namenZijnHetzelfde_isTrue() {
-        CandycrushModel model1 = new CandycrushModel("Robin");
-        CandycrushModel model2 = new CandycrushModel("Robin");
+        CandycrushModel model1 = new CandycrushModel("Robin", 5, 5);
+        CandycrushModel model2 = new CandycrushModel("Robin", 5, 5);
         assert (model1.getSpeler().equals(model2.getSpeler()));
     }
 
     @Test
     public void startknop_isIngedrukt_isTrue() {
-        CandycrushModel model = new CandycrushModel("Robin");
+        CandycrushModel model = new CandycrushModel("Robin", 5, 5);
         model.start();
         assert (model.isGestart());
     }
 
     @Test
     public void rowEnColumn_PositionIsJuist_isTrue() {
-        CandycrushModel model = new CandycrushModel("Robin");
-        BoardSize boardsize = new BoardSize(5,5);
-        Position position = new Position(4,4,boardsize);
+        CandycrushModel model = new CandycrushModel("Robin", 5, 5);
+        Position position = new Position(4,4,model.getBoardSize());
         assert(model.getPosition(4, 4).equals(position));
     }
 
     @Test
     public void spelGestart_checkWidth_isJuist(){
-        CandycrushModel model = new CandycrushModel("Robin");
+        CandycrushModel model = new CandycrushModel("Robin", 5, 5);
         assert (model.getBoardSize().columns() == 5);
     }
 
     @Test
     public void spelGestart_scoreIsNul_isTrue(){
-        CandycrushModel model = new CandycrushModel("Robin");
+        CandycrushModel model = new CandycrushModel("Robin", 5, 5);
         assert (model.getScore() == 0);
     }
 
@@ -98,7 +96,7 @@ public class CandycrushModelTests {
 
     @Test
     void firstTwoHaveCandy_ShouldReturnTrue_WhenFirstTwoCandiesAreEqual() {
-        CandycrushModel model = new CandycrushModel("TestPlayer");
+        CandycrushModel model = new CandycrushModel("TestPlayer", 5, 5);
 
         Position position1 = new Position(0, 0, model.getBoardSize());
         Position position2 = new Position(0, 1, model.getBoardSize());
@@ -118,7 +116,7 @@ public class CandycrushModelTests {
 
     @Test
     void firstTwoHaveCandy_ShouldReturnFalse_WhenFirstTwoCandiesAreDifferent() {
-        CandycrushModel model = new CandycrushModel("TestPlayer");
+        CandycrushModel model = new CandycrushModel("TestPlayer", 5, 5);
 
         Position position1 = new Position(0, 0, model.getBoardSize());
         Position position2 = new Position(0, 1, model.getBoardSize());
